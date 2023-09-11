@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -12,7 +11,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const version = "0.0.2"
+const version = "0.0.3"
 
 var (
 	showVersion bool
@@ -59,7 +58,7 @@ func Execute() {
 }
 
 func ParseTokensFromFile(file string) (map[string]string, error) {
-	buf, err := ioutil.ReadFile(file)
+	buf, err := os.ReadFile(file)
 	if err != nil {
 		return nil, err
 	}
