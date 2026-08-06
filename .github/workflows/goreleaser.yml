@@ -4,32 +4,34 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   goreleaser:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
-      - name: Set up Go
-        uses: WillAbides/setup-go-faster@v1.14.0
+      - name: Set up Go from go.mod
+        uses: actions/setup-go@v6
         with:
-          go-version-file: "go.mod"
+          go-version-file: go.mod
+          check-latest: true
 
-      - name: Make All
-        run: |
-          ./package.sh
-      - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v5
+      - name: Install UPX
+        uses: crazy-max/ghaction-upx@v4
         with:
-          # either 'goreleaser' (default) or 'goreleaser-pro'
+          install-only: true
+
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v7
+        with:
           distribution: goreleaser
-          version: latest
+          version: "~> v2"
           args: release --clean
-          # workdir: ./cmd/frps_allowed_ports
         env:
-          GITHUB_TOKEN: ${{ secrets.GPR_TOKEN }}
+          GOTOOLCHAIN: auto
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

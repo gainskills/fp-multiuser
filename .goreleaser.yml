@@ -1,21 +1,65 @@
+version: 2
+
+project_name: fp-multiuser
+
 builds:
-  - skip: true
+  - id: fp-multiuser
+    main: ./cmd/fp-multiuser
+    binary: fp-multiuser
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - "386"
+      - amd64
+      - arm
+      - arm64
+    goarm:
+      - "7"
+    ignore:
+      - goos: darwin
+        goarch: "386"
+      - goos: darwin
+        goarch: arm
+      - goos: windows
+        goarch: arm
+      - goos: windows
+        goarch: arm64
+
+upx:
+  - enabled: true
+    ids:
+      - fp-multiuser
+    goos:
+      - linux
+      - windows
+    compress: best
+
+archives:
+  - id: fp-multiuser
+    ids:
+      - fp-multiuser
+    formats:
+      - tar.gz
+    format_overrides:
+      - goos: windows
+        formats:
+          - zip
+    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+    wrap_in_directory: true
+    files:
+      - LICENSE
+
 checksum:
   name_template: '{{ .ProjectName }}_sha256_checksums.txt'
   algorithm: sha256
-  extra_files:
-  - glob: ./release/packages/*
-release:
-  # Same as for github
-  # Note: it can only be one: either github, gitlab or gitea
-  github:
-    owner: gainskills
-    name: fp-multiuser
 
+release:
   draft: false
-  # You can add extra pre-existing files to the release.
-  # The filename on the release will be the last part of the path (base). If
-  # another file with the same name exists, the latest one found will be used.
-  # Defaults to empty.
-  extra_files:
-    - glob: ./release/packages/*

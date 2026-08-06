@@ -63,8 +63,8 @@ func ParseTokensFromFile(file string) (map[string]string, error) {
 		return nil, err
 	}
 	ret := make(map[string]string)
-	rows := strings.Split(string(buf), "\n")
-	for _, row := range rows {
+	rows := strings.SplitSeq(string(buf), "\n")
+	for row := range rows {
 		kvs := strings.SplitN(row, "=", 2)
 		if len(kvs) == 2 {
 			ret[strings.TrimSpace(kvs[0])] = strings.TrimSpace(kvs[1])

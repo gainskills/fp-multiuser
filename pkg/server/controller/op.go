@@ -21,7 +21,7 @@ func (c *OpController) Register(engine *gin.Engine) {
 	engine.POST("/handler", MakeGinHandlerFunc(c.HandleLogin))
 }
 
-func (c *OpController) HandleLogin(ctx *gin.Context) (interface{}, error) {
+func (c *OpController) HandleLogin(ctx *gin.Context) (any, error) {
 	var r plugin.Request
 	var content plugin.LoginContent
 	r.Content = &content

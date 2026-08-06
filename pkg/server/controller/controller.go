@@ -20,7 +20,7 @@ func (e *HTTPError) Error() string {
 	return e.Err.Error()
 }
 
-type HandlerFunc func(ctx *gin.Context) (interface{}, error)
+type HandlerFunc func(ctx *gin.Context) (any, error)
 
 func MakeGinHandlerFunc(handler HandlerFunc) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
